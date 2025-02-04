@@ -253,6 +253,48 @@ def budget_properties():
         return jsonify({"error": "Internal Server Error", "message": str(e)}), 500
 
 
+@app.route('/project_price', methods=['GET'])
+def project_price():
+    try:
+        project_name = request.args.get('project_name')
+        area = request.args.get('area', 1.0)  # Default area to 1.0 if not provided
+
+        if not project_name:
+            return jsonify({"error": "Project name is required"}), 400
+
+        try:
+            area = float(area)
+            if area <= 0:
+                return jsonify({"error": "Area must be a positive number"}), 400
+        except ValueError:
+            return jsonify({"error": "Invalid area value. Must be a number"}), 400
+
+        # Convert project name column to lowercase for case-insensitive filtering
+        df['project name'] = df['project name'].str.lower()
+        project_name = project_name.lower()
+
+        # Filter dataframe by project name
+        filtered_df = df[df['project name'] == project_name]
+
+        if filtered_df.empty:
+            return jsonify({"message": "No project found with the given name"}), 404
+
+        # Convert 'new price' to numeric
+        filtered_df['new price'] = pd.to_numeric(filtered_df['new price'], errors='coerce')
+        
+        if filtered_df['new price'].isna().all():
+            return jsonify({"message": "Price information not available for this project"}), 404
+
+        # Apply area multiplier to new price
+        filtered_df['adjusted_price'] = filtered_df['new price'] * area
+
+        # Return project details with price
+        return jsonify(filtered_df[['project name', 'new price', 'adjusted_price']].to_dict(orient='records'))
+
+    except Exception as e:
+        print(f"Error in project_price endpoint: {str(e)}")
+        return jsonify({"error": "Internal Server Error", "message": str(e)}), 500
+
 @app.route('/market_value', methods=['GET'])
 def market_value():
     location = request.args.get('location')
