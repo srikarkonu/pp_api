@@ -147,9 +147,9 @@ def filter_properties():
             elif property_category == 'Commercial':
                 rules.commercial_Spaces()
 
-        if 'bedrooms' in filters:
+        if 'bhk' in filters:
             try:
-                rules.bedroom_price(int(filters.get('bedrooms')))
+                rules.bedroom_price(int(filters.get('bhk')))
             except (ValueError, TypeError):
                 return jsonify({"error": "Bedrooms must be a positive integer"}), 400
 
