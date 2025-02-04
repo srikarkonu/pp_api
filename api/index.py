@@ -270,11 +270,10 @@ def project_price():
             return jsonify({"error": "Invalid area value. Must be a number"}), 400
 
         # Convert project name column to lowercase for case-insensitive filtering
-        df['project name'] = df['project name'].str.lower()
-        project_name = project_name.lower()
+        df['Project'] = df['Project'].str.strip().str.lower()
 
         # Filter dataframe by project name
-        filtered_df = df[df['project name'] == project_name]
+        filtered_df = df[df['Project'].str.strip().str.lower() == project_name.strip().lower()]
 
         if filtered_df.empty:
             return jsonify({"message": "No project found with the given name"}), 404
@@ -289,7 +288,7 @@ def project_price():
         filtered_df['adjusted_price'] = filtered_df['new price'] * area
 
         # Return project details with price
-        return jsonify(filtered_df[['project name', 'new price', 'adjusted_price']].to_dict(orient='records'))
+        return jsonify(filtered_df[['Project', 'new price', 'adjusted_price']].to_dict(orient='records'))
 
     except Exception as e:
         print(f"Error in project_price endpoint: {str(e)}")
