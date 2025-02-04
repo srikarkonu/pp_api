@@ -117,42 +117,45 @@ class Rules:
 
 
 
-@app.route('/filter_properties/', methods=['POST'])
+@app.route('/filter_properties/', methods=['GET'])
 def filter_properties():
     try:
-        # Get filters from the request body
-        filters = request.get_json()
-        if not filters:
-            return jsonify({"error": "Invalid or missing data in request body"}), 400
+        # Get filters from query parameters
+        filters = request.args
 
         rules = Rules()
 
         # Apply filters
         if 'city' in filters:
-            rules.select_city(filters['city'])
+            rules.select_city(filters.get('city'))
+
         if 'locality' in filters:
-            rules.select_locality(filters['locality'])
+            rules.select_locality(filters.get('locality'))
+
         if 'pincode' in filters:
             try:
-                rules.pincode_filter(int(filters['pincode']))  # Ensure pincode is integer
-            except ValueError:
+                rules.pincode_filter(int(filters.get('pincode')))
+            except (ValueError, TypeError):
                 return jsonify({"error": "Pincode must be an integer"}), 400
+
         if 'property_category' in filters:
-            if filters['property_category'] == 'Gated community':
+            property_category = filters.get('property_category')
+            if property_category == 'Gated community':
                 rules.gated_community_price()
-            elif filters['property_category'] == 'Stand Alone':
+            elif property_category == 'Stand Alone':
                 rules.stand_alone_apartments()
-            elif filters['property_category'] == 'Commercial':
+            elif property_category == 'Commercial':
                 rules.commercial_Spaces()
+
         if 'bedrooms' in filters:
             try:
-                rules.bedroom_price(int(filters['bedrooms']))  # Ensure bedrooms is an integer
-            except ValueError:
+                rules.bedroom_price(int(filters.get('bedrooms')))
+            except (ValueError, TypeError):
                 return jsonify({"error": "Bedrooms must be a positive integer"}), 400
 
         if 'area' in filters:
             try:
-                area = float(filters['area'])
+                area = float(filters.get('area'))
                 if area <= 0:
                     raise ValueError("Area must be greater than 0.")
                 # Calculate min and max prices before area adjustment
@@ -176,8 +179,12 @@ def filter_properties():
             }), 404
 
         # Pagination logic
-        page = filters.get('page', 1)
-        page_size = filters.get('page_size', 10)
+        try:
+            page = int(filters.get('page', 1))
+            page_size = int(filters.get('page_size', 10))
+        except ValueError:
+            return jsonify({"error": "Page and page_size must be integers"}), 400
+
         start = (page - 1) * page_size
         end = start + page_size
         current_properties_page = filtered_properties[start:end]
