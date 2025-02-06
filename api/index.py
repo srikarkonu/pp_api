@@ -416,6 +416,7 @@ def properties_near():
         # Catch all errors and print the exception for debugging
         print(f"Error occurred: {str(e)}")
         return jsonify({"error": "Internal Server Error", "message": str(e)}), 500
+        
 
 @app.route('/properties_near_metro_station', methods=['GET'])
 def properties_near_metro_station():
