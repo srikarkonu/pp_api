@@ -582,32 +582,28 @@ def rera_approved_properties():
         # Filter for RERA-approved properties
         rera_approved_df = df[df['RERA Approved'].str.strip().str.lower() == 'yes']
 
-        # Case 1: If both project_name and location are provided or only project_name, return 'Yes' or 'No' for RERA approval
-        if project_name and location:
-            filtered_df = rera_approved_df[
-                (rera_approved_df['Project'].str.strip().str.lower().str.contains(project_name, na=False)) &
-                (rera_approved_df['address'].str.strip().str.lower().str.contains(location, na=False))
-            ]
-            if filtered_df.empty:
-                return jsonify({"rera_approved": "No"}), 200
-            return jsonify({"rera_approved": "Yes"}), 200
-
-        elif project_name:
-            # Case 2: If only project_name is provided, check RERA approval for that project
-            filtered_df = rera_approved_df[rera_approved_df['Project'].str.strip().str.lower().str.contains(project_name, na=False)]
-            if filtered_df.empty:
-                return jsonify({"rera_approved": "No"}), 200
-            return jsonify({"rera_approved": "Yes"}), 200
-
-        # Case 3: If only location is provided, return all RERA-approved properties in that location
-        if location:
-            location_df = rera_approved_df[rera_approved_df['address'].str.strip().str.lower().str.contains(location, na=False)]
-            if location_df.empty:
-                return jsonify({"message": "No RERA-approved properties found in the specified location"}), 404
-            properties = location_df.to_dict(orient='records')
+        # If both project_name and location are not provided, return all RERA-approved properties
+        if project_name == "" and location == "":
+            properties = rera_approved_df.to_dict(orient='records')
             return jsonify({"rera_approved_properties": properties}), 200
 
-        # Case 4: If neither project_name nor location is provided, return all RERA-approved properties
+        # Apply project name filter if provided
+        if project_name:
+            rera_approved_df = rera_approved_df[
+                rera_approved_df['Project'].str.strip().str.lower().str.contains(project_name, na=False)
+            ]
+
+        # Apply location filter if provided
+        if location:
+            rera_approved_df = rera_approved_df[
+                rera_approved_df['address'].str.strip().str.lower().str.contains(location, na=False)
+            ]
+
+        # If no properties found after applying filters, return message
+        if rera_approved_df.empty:
+            return jsonify({"message": "No RERA-approved properties found matching the criteria"}), 404
+
+        # Convert to JSON and return
         properties = rera_approved_df.to_dict(orient='records')
         return jsonify({"rera_approved_properties": properties}), 200
 
