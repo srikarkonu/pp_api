@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify,send_file
 import pandas as pd
 from geopy.distance import geodesic
 
@@ -115,6 +115,9 @@ class Rules:
     def return_df(self):
         return self.df
 
+@app.route('/')
+def home():
+    return send_file("index.html")
 
 
 @app.route('/filter_properties/', methods=['GET'])
