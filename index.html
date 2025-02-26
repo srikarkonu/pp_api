@@ -5,24 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Real Estate Properties API</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 50px;
-        }
-        h1 {
-            font-size: 2.5em;
-            color: #2c3e50;
-        }
-        p {
-            font-size: 1.2em;
-            color: #555;
-        }
-        code {
-            background-color: #f4f4f4;
-            padding: 5px;
-            border-radius: 5px;
-        }
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+        h1 { font-size: 2.5em; color: #2c3e50; }
+        p { font-size: 1.2em; color: #555; }
+        code { background-color: #f4f4f4; padding: 5px; border-radius: 5px; }
     </style>
 </head>
 <body>
@@ -33,8 +19,16 @@
         <li><code>/filter_properties/?locality=Gachibowli</code> - Filter properties by locality</li>
         <li><code>/filter_properties/?pincode=500032</code> - Filter properties by pincode</li>
         <li><code>/filter_properties/?bhk=2</code> - Filter properties by number of bedrooms</li>
-        <li><code>/filter_properties/?area=1000</code> - Filter properties by area</li>
+        <li><code>/properties_near_location/?lat=17.3850&lng=78.4867&radius=5</code> - Properties near a location</li>
+        <li><code>/properties_near_metro/?station=Madhapur</code> - Properties near a metro station</li>
+        <li><code>/rera_approved_properties/</code> - Get RERA-approved properties</li>
+        <li><code>/market_value/?locality=Kondapur</code> - Get market value of properties</li>
+        <li><code>/properties_near_it_hubs/?hub=Hitec City</code> - Properties near IT hubs</li>
+        <li><code>/budget_properties/?locality=Kukatpally&budget=5000000</code> - Filter budget properties</li>
+        <li><code>/available_properties/?location=miyapur</code> - EMI calculator</li>
+        <li><code>/pre_approved_loans/?user_id=12345</code> - Get pre-approved loan process details</li>
     </ul>
     <p>Modify the parameters as needed to refine your search.</p>
 </body>
 </html>
+
