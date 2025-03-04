@@ -9,7 +9,7 @@ CORS(app, origins=["http://localhost:8501", "https://yourfrontend.com"], support
 
 @app.route("/chat", methods=["POST"])
 def chat():    
-    return {"message": Chat response} 
+    return {"message": "Chat response"} 
 # from fastapi import FastAPI
 # from pydantic import BaseModel
 # from langchain.chat_models import ChatOpenAI 
