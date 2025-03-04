@@ -1,25 +1,28 @@
-from flask import Flask, request, jsonify,send_file
+#from flask import Flask, request, jsonify,send_file
 import pandas as pd
 from geopy.distance import geodesic
-from flask_cors import CORS
+#from flask_cors import CORS
 
+#app = Flask(__name__)
+
+# CORS(app, origins=["http://localhost:8501", "https://yourfrontend.com"], supports_credentials=True)
+
+# @app.route("/chat", methods=["POST"])
+# def chat():    
+#     return {"message": "Chat response"} 
+
+from flask import Flask, request, jsonify
+from flask_cors import CORS  # Import CORS
+ 
 app = Flask(__name__)
-
-CORS(app, origins=["http://localhost:8501", "https://yourfrontend.com"], supports_credentials=True)
-
+ 
+# Allow requests from all origins (for development purposes)
+CORS(app, resources={r"/*": {"origins": "*"}})
+ 
 @app.route("/chat", methods=["POST"])
-def chat():    
-    return {"message": "Chat response"} 
-# from fastapi import FastAPI
-# from pydantic import BaseModel
-# from langchain.chat_models import ChatOpenAI 
-# app = FastAPI() 
-# llm = ChatOpenAI(model_name="gpt-4", openai_api_key="YOUR_API_KEY") 
-# class Query(BaseModel):     
-#    query: str@app.post("/chat")
-# async def chat_with_bot(user_query: Query):    
-#     response = llm.predict(user_query.query)    
-#     return {"response": response} 
+def chat():
+    data = request.get_json()
+    user_message = data.get("message", "")
 
 # Load the dataset
 df = pd.read_csv('Datasampling-konu - Sheet1.csv')
@@ -691,6 +694,15 @@ def calculate_emi(loan_amount, annual_interest_rate, tenure_years):
 
     return emi, total_interest
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+# if __name__ == '__main__':
+#     app.run(host='0.0.0.0', port=5000)
+
+    if not user_message:
+        return jsonify({"error": "No message provided"}), 400
+ 
+    response = f"Mock response for: {user_message}"  # Replace with actual LangChain logic
+    return jsonify({"message": response})
+ 
+if __name__ == "__main__":
+    app.run(port=8501, debug=True)
 
