@@ -1,24 +1,12 @@
-#from flask import Flask, request, jsonify,send_file
+from flask import Flask, request, jsonify,send_file
 import pandas as pd
 from geopy.distance import geodesic
-#from flask_cors import CORS
+from flask_cors import CORS
 
-#app = Flask(__name__)
-
-# CORS(app, origins=["http://localhost:8501", "https://yourfrontend.com"], supports_credentials=True)
-
-# @app.route("/chat", methods=["POST"])
-# def chat():    
-#     return {"message": "Chat response"} 
-
-from flask import Flask, request, jsonify
-from flask_cors import CORS  # Import CORS
- 
 app = Flask(__name__)
- 
-# Allow requests from all origins (for development purposes)
-CORS(app, resources={r"/*": {"origins": "*"}})
- 
+
+CORS(app, resources={r"/chat": {"origins": "http://localhost:5173"}}, supports_credentials=True)
+  
 @app.route("/chat", methods=["POST"])
 def chat():
     data = request.get_json()
@@ -700,8 +688,8 @@ def calculate_emi(loan_amount, annual_interest_rate, tenure_years):
     if not user_message:
         return jsonify({"error": "No message provided"}), 400
  
-    response = f"Mock response for: {user_message}"  # Replace with actual LangChain logic
-    return jsonify({"message": response})
+    response = {"message": f"Received: {user_message}"}
+    return jsonify(response)
  
 if __name__ == "__main__":
     app.run(port=8501, debug=True)
