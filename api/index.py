@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify,send_file
 import pandas as pd
 from geopy.distance import geodesic
+from flask_cors import CORS
+CORS(app, origins=["http://localhost:5173", "https://yourfrontend.com"], supports_credentials=True)
 
 app = Flask(__name__)
 
