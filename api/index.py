@@ -9,8 +9,17 @@ CORS(app, origins=["http://localhost:5173", "https://yourfrontend.com"], support
 
 @app.route("/chat", methods=["POST"])
 def chat():    
-    return {"message": "Chat response"}
- 
+    return {"message": Chat response} 
+# from fastapi import FastAPI
+# from pydantic import BaseModel
+# from langchain.chat_models import ChatOpenAI 
+# app = FastAPI() 
+# llm = ChatOpenAI(model_name="gpt-4", openai_api_key="YOUR_API_KEY") 
+# class Query(BaseModel):     
+#    query: str@app.post("/chat")
+# async def chat_with_bot(user_query: Query):    
+#     response = llm.predict(user_query.query)    
+#     return {"response": response} 
 
 # Load the dataset
 df = pd.read_csv('Datasampling-konu - Sheet1.csv')
