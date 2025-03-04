@@ -7,6 +7,11 @@ app = Flask(__name__)
 
 CORS(app, origins=["http://localhost:5173", "https://yourfrontend.com"], supports_credentials=True)
 
+@app.route("/chat", methods=["POST"])
+def chat():    
+    return {"message": "Chat response"}
+ 
+
 # Load the dataset
 df = pd.read_csv('Datasampling-konu - Sheet1.csv')
 
